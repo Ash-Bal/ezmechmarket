@@ -1,4 +1,4 @@
-#!/Users/ashvath/Documents/mechmarket/ezmechmarket/bin/python3
+#!/Users/ashvath/Documents/mechmarket/ezmechmarket-venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -1,5 +1,5 @@
 $ cd Documents/mechmarket
-$ . /ezmechmarket-venv/bin/activate
+$ . ezmechmarket-venv/bin/activate
 $ export FLASK_APP=ezmechmarket
 $ export FLASK_ENV=development
 $ flask run
