@@ -1,0 +1,7 @@
+$ export FLASK_APP=ezmechmarket
+$ export FLASK_ENV=development
+$ flask run
+
+
+
+# 'Hello, World!' test page: http://127.0.0.1:5000/hello
