@@ -28,9 +28,9 @@ def get_posts(mechmarket):
             'select id from posts where title = ?', (submission.title,)
         ).fetchone() is None:
             db.execute(
-                'insert into posts (title, url, body)'
-                ' values (?, ?, ?)',
-                (submission.title, submission.url, submission.selftext)
+                'insert into posts (title, url, body, created)'
+                ' values (?, ?, ?, ?)',
+                (submission.title, submission.url, submission.selftext, submission.created_utc)
             )
     db.commit()
 
@@ -112,9 +112,8 @@ def index():
         'update images set image_url = replace(image_url, ".jpg",".png") where image_url like "%.jpg";'
     )
     images = db.execute(
-        'select image_url from images'
+        'select i.image_url, i.title, p.url from images i join posts p on i.title = p.title order by p.created desc'
     ).fetchall()
-
   
-    # print(images[0][0])
+    print(images[0][1])
     return render_template('index.html', images = images)
