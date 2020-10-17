@@ -1,0 +1,14 @@
+{% block header %}
+    <h1> IMAGES </h1>
+{% endblock %}
+
+{% block content %}
+<div class= gallery ></div>
+    {% for image in images %}
+            {% set picture = image[0] | string()%}
+            <img src="{{image[0]}}" style="width:33%">
+    {% endfor %}
+</div>
+{%endblock%}
+
+

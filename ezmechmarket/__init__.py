@@ -2,10 +2,10 @@ import os
 
 from flask import Flask
 
-
 def create_app(test_config=None):
     # create and cofigure the app
     app = Flask(__name__, instance_relative_config=True)
+    
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'ezmechmarket.sqlite'),
@@ -24,12 +24,20 @@ def create_app(test_config=None):
     except OSError:
         pass
     
+    
     # a simple page that says hello
     # @app.route('/hello')
     # def hello():
     #     return 'Hello, World!'
 
+    if __name__ == "__main__":
+        app.run(ssl_context='adhoc')
+
     from . import db
     db.init_app(app)
+
+    from . import market
+    app.register_blueprint(market.bp)
+    app.add_url_rule('/', endpoint='index')
     
     return app

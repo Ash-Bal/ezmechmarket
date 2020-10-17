@@ -1,13 +1,120 @@
 import functools
+import praw
+from imgurpython import ImgurClient
+import re
 
 from flask import(
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
+from werkzeug.exceptions import abort
 
 from ezmechmarket.db import get_db
 
 bp = Blueprint('market', __name__)
 
-# @bp.route('/')
-# def index():
-#     db = 
+# initialize reddit class with ezmechmarket script
+reddit = praw.Reddit("ezmechmarket")
+
+imgurClient = 'd21478951409e78'
+imgurSecret = '0889c283df594f3a9638b0140284722d8b5fef90'
+imgur = ImgurClient(imgurClient, imgurSecret)
+
+
+
+def get_posts(mechmarket):
+    db = get_db()
+    for submission in mechmarket:
+        if db.execute(
+            'select id from posts where title = ?', (submission.title,)
+        ).fetchone() is None:
+            db.execute(
+                'insert into posts (title, url, body)'
+                ' values (?, ?, ?)',
+                (submission.title, submission.url, submission.selftext)
+            )
+    db.commit()
+
+def get_album_url(mechmarket):
+    db = get_db()
+    get_album_regex = "(https|http)://(i.|)imgur.com/(a/([a-zA-Z0-9]*)|gallery/([a-zA-Z0-9]*)|([a-zA-Z0-9]*).jpg|([a-zA-Z0-9]*))" 
+    add_jpg_regex = "(https|http)://(i.|)imgur.com/([a-zA-Z0-9]*$)"
+    jpg_regex = ".jpg$"
+    for submission in mechmarket:
+        # print("GET THE ALBUMS PLS")
+        album_url = re.search(get_album_regex, submission.selftext)
+        # print(album_url.group(0))
+        if (album_url and re.search(add_jpg_regex, album_url.group(0))):
+            url = album_url.group(0) + ".jpg"
+            if db.execute(
+                'select id from images where image_url = ?', (url,)
+            ).fetchone() is None:
+                db.execute(
+                    'insert into images (title, image_url)'
+                    ' values (?, ?)',
+                    (submission.title, url)
+                )
+        elif (album_url and re.search(jpg_regex, album_url.group(0))):
+            url = album_url.group(0)
+            # print(url)
+            if db.execute(
+                'select id from images where image_url = ?', (url,)
+            ).fetchone() is None:
+                db.execute(
+                    'insert into images (title, image_url)'
+                    ' values (?, ?)',
+                    (submission.title, url)
+                )
+        elif (album_url):
+            url = album_url.group(0)
+            # print(url)
+            db.execute(
+                'insert into album (title, album_url)'
+                ' values (?, ?)',
+                (submission.title, url)
+            )
+    db.commit()
+
+def get_image_url(mechmarket):
+    db = get_db()
+    code_regex = "[a-zA-Z0-9]*.$"
+    for submission in mechmarket:
+        album_link = db.execute(
+            'select album_url from album where title = ?',
+            (submission.title,)
+        ).fetchone()
+        if (album_link):
+            # print(album_link[0])
+            album = re.search(code_regex, album_link[0])
+            unwrapped = imgur.get_album_images(album.group(0))
+            for i in range(len(unwrapped)):
+                if db.execute(
+                    'select id from images where image_url = ?', (unwrapped[i].link,)
+                ).fetchone() is None:
+                    db.execute(
+                        'insert into images (title, image_url)'
+                        ' values (?, ?)',
+                        (submission.title, unwrapped[i].link)
+                    )
+        else:
+            continue
+    db.commit()
+
+@bp.route('/')
+def index():
+    db = get_db()
+    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=10)
+    get_posts(mechmarket)
+    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=10)
+    get_album_url(mechmarket)
+    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=10)
+    get_image_url(mechmarket)
+    db.execute(
+        'update images set image_url = replace(image_url, ".jpg",".png") where image_url like "%.jpg";'
+    )
+    images = db.execute(
+        'select image_url from images'
+    ).fetchall()
+
+  
+    # print(images[0][0])
+    return render_template('index.html', images = images)

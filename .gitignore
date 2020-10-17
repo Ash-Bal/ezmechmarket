@@ -129,3 +129,5 @@ dmypy.json
 server-init.txt
 .DS_Store
 .gitattributes
+
+praw.ini
