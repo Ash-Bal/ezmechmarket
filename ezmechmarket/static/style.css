@@ -1,0 +1,19 @@
+html{
+    font-family: monospace;
+    background: rgb(54, 54, 54);
+}
+
+h1 {
+    font-family: monospace;
+    color: rgb(201, 201, 201);
+}
+
+body {
+    font-family: monospace;
+    color: rgb(201, 201, 201);
+}
+
+a {
+    color: rgb(201, 201, 201);
+}
+

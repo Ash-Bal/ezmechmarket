@@ -114,6 +114,32 @@ def index():
     images = db.execute(
         'select i.image_url, i.title, p.url from images i join posts p on i.title = p.title order by p.created desc'
     ).fetchall()
-  
-    print(images[0][1])
-    return render_template('index.html', images = images)
+
+    titles = db.execute(
+        'select distinct(i.title), p.url from images i join posts p on i.title = p.title order by p.created desc'
+    ).fetchall()
+
+    albums = db.execute(
+        'select count(i.image_url) from images i join posts p on i.title = p.title group by p.title order by p.created desc'
+    ).fetchall()
+
+    post_count = db.execute(
+        'select count(title) from posts'
+    ).fetchone()
+    album_title = []
+    album_images = []
+    album_url = []
+    for post in range(len(titles)):
+        album_title.append(titles[post][0])
+        album_url.append(titles[post][1])
+        album_images.append(
+            db.execute(
+                'select distinct(i.image_url) from images i join posts p on i.title = p.title where p.title = ? order by p.created desc',
+                (titles[post][0], )
+            ).fetchall()
+        )
+    print(post_count[0])
+    print(len(album_url))
+    print(album_images[0])
+    
+    return render_template('index.html', titles = album_title, urls = album_url, images = album_images)

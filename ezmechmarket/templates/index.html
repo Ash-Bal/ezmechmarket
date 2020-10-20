@@ -2,15 +2,20 @@
     <h1> EZMECHMARKERT </h1>
 {% endblock %}
 
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 {% block content %}
-<div class= gallery ></div>
-    {% for image in images %}
-        <body>
-            <a href="{{image[2]}}">{{image[1]}}</a> 
-        </body> 
-            <img src="{{image[0]}}" style="width:33%">
+<div class= gallery >
+    {% for title in titles %}
+        <a href="{{urls[loop.index0]}}">{{title}}</a> 
+        <div class = "album" >
+            {% for image in images[loop.index0] %}
+                <img src="{{image[0]}}" style="width:33%">
+            {% endfor %}
+        </div>
     {% endfor %}
 </div>
 {%endblock%}
+
 
 
