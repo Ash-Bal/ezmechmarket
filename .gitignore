@@ -131,3 +131,6 @@ server-init.txt
 .gitattributes
 
 praw.ini
+imgurinit.py
+
+.cloudignore

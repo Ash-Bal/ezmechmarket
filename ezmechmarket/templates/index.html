@@ -1,21 +1,42 @@
 {% block header %}
-    <h1> EZMECHMARKERT </h1>
+<div class="title">
+    <h1> [EZ_MECHMARKERT] </h1>
+</div>
 {% endblock %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename = 'stack.js') }}"></script> 
 
 {% block content %}
 <div class= gallery >
     {% for title in titles %}
-        <a href="{{urls[loop.index0]}}">{{title}}</a> 
-        <div class = "album" >
-            {% for image in images[loop.index0] %}
-                <img src="{{image[0]}}" style="width:33%">
+    <pictures style="display:flex;align-items:center;justify-content:center">
+        <div class = "album">
+            {% for image in images[loop.index0]%}
+                <div  class = "stacker">
+                    <div class = "{{title}}">
+                        <div class="numbertext">{{loop.index}} / {{loop.length}}</div>
+                        <div style="display:flex;justify-content:center;align-items:center;">
+                            <div><img src="{{image[0]}}"></div>
+                        </div>
+                    </div>
+                </div>  
             {% endfor %}
+            <script> showSlides(1, '{{title}}')</script>
+                  <!-- Next and previous buttons -->
+            {% if images[loop.index0]|length > 1 %}
+            <a class="prev" onclick="plusSlides(-1, '{{title}}')">&#10094;</a>
+            <a class="next" onclick="plusSlides(1, '{{title}}')">&#10095;</a>
+            {% endif %}
         </div>
+        <div></div>
+        <div class = "post"><a href="{{urls[loop.index0]}}" target="_blank" rel="noopener noreferrer"><span>{{title}}</span></a></div>
+    </pictures>
     {% endfor %}
 </div>
 {%endblock%}
+
+
 
 
 

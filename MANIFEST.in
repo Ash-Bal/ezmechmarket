@@ -1,0 +1,8 @@
+include ezmechmarket/schema.sql
+include ezmechmarket/imgurinit.py
+include praw.ini
+
+graft ezmechmarket/static
+graft ezmechmarket/templates
+
+global-exclude *.pyc

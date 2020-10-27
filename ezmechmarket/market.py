@@ -1,7 +1,9 @@
 import functools
 import praw
+from ezmechmarket.imgurinit import init_Imgur
 from imgurpython import ImgurClient
 import re
+import requests
 
 from flask import(
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -12,12 +14,13 @@ from ezmechmarket.db import get_db
 
 bp = Blueprint('market', __name__)
 
-# initialize reddit class with ezmechmarket script
+# initialize reddit class with ezmechmarket script(praw.ini)
 reddit = praw.Reddit("ezmechmarket")
 
-imgurClient = 'd21478951409e78'
-imgurSecret = '0889c283df594f3a9638b0140284722d8b5fef90'
-imgur = ImgurClient(imgurClient, imgurSecret)
+# initialize imgur class
+# imgurClient = 'd21478951409e78'
+# imgurSecret = '378ebb7884ddeed5c0893aba349decb46af17224'
+imgur = ImgurClient(init_Imgur()[0], init_Imgur()[1])
 
 
 
@@ -85,7 +88,23 @@ def get_image_url(mechmarket):
         if (album_link):
             # print(album_link[0])
             album = re.search(code_regex, album_link[0])
+            # print("checking")
+            # check = imgur.get_album("QoKSKYp")
+            # print(check)
+            # print("Getting link...")
+            # link = requests.head(imgur.get_album(album.group(0)))
+            # print("Your link is: ")
+            # print(album_link[0])
+            try:
+                imgur.get_album(album.group(0))
+            except:
+                continue
+            # if (link.status_code == 200):
             unwrapped = imgur.get_album_images(album.group(0))
+            #     print(album.group(0))
+            # else:
+            #     print(link.status_code, print(album.group(0)))
+            #     continue
             for i in range(len(unwrapped)):
                 if db.execute(
                     'select id from images where image_url = ?', (unwrapped[i].link,)
@@ -111,16 +130,9 @@ def index():
     db.execute(
         'update images set image_url = replace(image_url, ".jpg",".png") where image_url like "%.jpg";'
     )
-    images = db.execute(
-        'select i.image_url, i.title, p.url from images i join posts p on i.title = p.title order by p.created desc'
-    ).fetchall()
 
     titles = db.execute(
         'select distinct(i.title), p.url from images i join posts p on i.title = p.title order by p.created desc'
-    ).fetchall()
-
-    albums = db.execute(
-        'select count(i.image_url) from images i join posts p on i.title = p.title group by p.title order by p.created desc'
     ).fetchall()
 
     post_count = db.execute(
