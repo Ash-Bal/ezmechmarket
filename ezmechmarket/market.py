@@ -1,20 +1,23 @@
 import functools
 import praw
+from ezmechmarket.db import get_db
 from ezmechmarket.imgurinit import init_Imgur
 from imgurpython import ImgurClient
 import re
 import requests
+import os
 
 from flask import(
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.exceptions import abort
 
-from ezmechmarket.db import get_db
+
 
 bp = Blueprint('market', __name__)
 
 # initialize reddit class with ezmechmarket script(praw.ini)
+print(os.getcwdb())
 reddit = praw.Reddit("ezmechmarket")
 
 # initialize imgur class

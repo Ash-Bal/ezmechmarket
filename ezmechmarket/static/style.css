@@ -1,11 +1,11 @@
 html{
     font-family: monospace;
-    background: rgb(122, 122, 122);
+    background: rgb(23, 15, 53);
 }
 
 h1 {
     font-family: monospace;
-    color: rgb(201, 201, 201);
+    color: rgb(243, 167, 26);
     font-size: 6vw;
     text-align: center;
 }
@@ -139,7 +139,7 @@ img {
 
 .post{
     position: absolute;
-    bottom:0;
+    bottom:5;
     text-align: center;
     width: 85%;
     text-overflow: ellipsis;
