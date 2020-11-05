@@ -19,7 +19,6 @@ My website takes new posts from users that are selling parts, and displays the i
  
  ## To-Do:
  
-  - deploy using cloud service
   - expand post title when hovering over link
-  - add scrolling banner at the top with favorite images
   - add database functionality that purges posts after certain amount of time
+  - improve image load times
