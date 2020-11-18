@@ -20,5 +20,3 @@ My website takes new posts from users that are selling parts, and displays the i
  ## To-Do:
  
   - expand post title when hovering over link
-  - add database functionality that purges posts after certain amount of time
-  - improve image load times
