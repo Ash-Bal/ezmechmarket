@@ -2,6 +2,7 @@
 var slideIndex = 1;
 showSlides(slideIndex, album);
 
+
 // Next/previous controls
 function plusSlides(n, album) {
   showSlides(slideIndex += n, album);
@@ -11,6 +12,7 @@ function plusSlides(n, album) {
 function currentSlide(n, album) {
   showSlides(slideIndex = n, album);
 }
+
 
 function showSlides(n, album) {
   var i;
@@ -27,3 +29,6 @@ function showSlides(n, album) {
   slides[slideIndex-1].style.display = "block";
 //   dots[slideIndex-1].className += " active";
 } 
+
+
+

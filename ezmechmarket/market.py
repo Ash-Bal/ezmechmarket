@@ -29,6 +29,10 @@ imgur = ImgurClient(init_Imgur()[0], init_Imgur()[1])
 
 def get_posts(mechmarket):
     db = get_db()
+    db.execute(
+        'delete from posts'
+    )
+    db.commit()
     for submission in mechmarket:
         if db.execute(
             'select id from posts where title = ?', (submission.title,)
@@ -124,11 +128,11 @@ def get_image_url(mechmarket):
 @bp.route('/')
 def index():
     db = get_db()
-    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=10)
+    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=21)
     get_posts(mechmarket)
-    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=10)
+    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=21)
     get_album_url(mechmarket)
-    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=10)
+    mechmarket = reddit.subreddit("mechmarket").search('flair_name:"Selling"', sort='new', limit=21)
     get_image_url(mechmarket)
     db.execute(
         'update images set image_url = replace(image_url, ".jpg",".png") where image_url like "%.jpg";'

@@ -1,13 +1,38 @@
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'carousel.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename = 'stack.js') }}"></script> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+
+
+
 {% block header %}
-<div class="title">
-    <h1> [EZ_MECHMARKET] </h1>
-</div>
+
 {% endblock %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<script src="{{ url_for('static', filename = 'stack.js') }}"></script> 
+<!-- Slideshow container -->
 
 {% block content %}
+
+<div class="img-container" data-slideshow>
+    <div class="title">
+        <h1>[EZ_MECHMARKET]</h1>
+    </div>
+    <img src="{{url_for('static', filename='endgame1.jpg')}}">
+    <img src="{{url_for('static', filename='endgame2.jpg')}}">
+    <img src="{{url_for('static', filename='endgame3.png')}}">
+    <img src="{{url_for('static', filename='endgame4.jpg')}}">
+    <img src="{{url_for('static', filename='endgame5.jpg')}}">
+    <img src="{{url_for('static', filename='endgame6.jpg')}}">
+    <img src="{{url_for('static', filename='endgame7.jpg')}}">
+</div>
+
+
+
+
 <div class= gallery >
     {% for title in titles %}
     <pictures style="display:flex;align-items:center;justify-content:center">
@@ -17,7 +42,7 @@
                     <div class = "{{title}}">
                         <div class="numbertext">{{loop.index}} / {{loop.length}}</div>
                         <div style="display:flex;justify-content:center;align-items:center;">
-                            <div><img src="{{image[0]}}"></div>
+                            <div><img src="{{image[0]}}" loading="lazy"></img></div>
                         </div>
                     </div>
                 </div>  
@@ -28,12 +53,17 @@
             <a class="prev" onclick="plusSlides(-1, '{{title}}')">&#10094;</a>
             <a class="next" onclick="plusSlides(1, '{{title}}')">&#10095;</a>
             {% endif %}
+            <script> currentSlide(1, '{{title}}') </script>
         </div>
-        <div></div>
-        <div class = "post"><a href="{{urls[loop.index0]}}" target="_blank" rel="noopener noreferrer"><span>{{title}}</span></a></div>
+        <br>
+        <div class = "post"><a href="{{urls[loop.index0]}}" target="_blank" rel="noopener noreferrer"><span> {{title}}  </span></a></div>
     </pictures>
+
     {% endfor %}
 </div>
+
+
+
 {%endblock%}
 
 
