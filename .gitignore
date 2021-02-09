@@ -138,3 +138,9 @@ imgurinit.py
 ezmechmarket-slider-pics/
 
 .png
+
+MANIFEST.in
+
+run.py
+
+setup.py
